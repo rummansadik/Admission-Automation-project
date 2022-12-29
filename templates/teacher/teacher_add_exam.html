@@ -1,0 +1,69 @@
+{% extends 'teacher/teacherbase.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+      a:link {
+        text-decoration: none;
+      }
+    </style>
+</head>
+
+<div class="container">
+  <h2 style="text-align:center; ">Add Course Info</h2>
+  <form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
+    {%csrf_token%}
+    <div class="form-group">
+      <label for="course_name">Course Name</label>
+      {% render_field courseForm.course_name class="form-control" placeholder="Example: Software Engineering" %}
+      <hr>
+
+      <label for="course_type">Course Type</label>
+      {% render_field courseForm.course_type class="form-control" %}
+
+      <hr>
+      <label for="total_students">Number of Students</label>
+      {% render_field courseForm.total_students class="form-control" placeholder="Example: 50" %}
+
+      <hr>
+      <label for="question_number">Total Question</label>
+      {% render_field courseForm.question_number class="form-control" placeholder="Example: 50" %}
+
+      <hr>
+      <label for="total_marks">Total Marks</label>
+      {% render_field courseForm.total_marks class="form-control" placeholder="Example: 100" %}
+
+      <hr>
+      <div class="row">
+        <div class="col-md-6">
+          <label for="start_date">Start Date</label>
+          {% render_field courseForm.start_date type="date" class="form-control" %}
+        </div>
+        <div class="col-md-6">
+          <label for="start_time">Start Time</label>
+          {% render_field courseForm.start_time type="time" class="form-control" %}
+        </div>
+      </div>
+
+      <hr>
+      <div class="row">
+        <div class="col-md-6">
+          <label for="end_date">End Date</label>
+          {% render_field courseForm.end_date type="date" class="form-control" %}
+        </div>
+        <div class="col-md-6">
+          <label for="end_time">End Time</label>
+          {% render_field courseForm.end_time type="time" class="form-control" %}
+        </div>
+      </div>
+      
+    </div>
+    <button type="submit" class="btn btn-success" style="border-radius: 0%;">Submit Info</button>
+  </form>
+</div>
+
+{% endblock content %}

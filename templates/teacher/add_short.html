@@ -1,0 +1,25 @@
+{% load static %}
+{% load widget_tweaks %}
+
+
+
+<form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
+    {%csrf_token%}
+    <div class="form-group">
+        <label for="question">Course</label>
+        {% render_field shortQuestionForm.courseID|attr:'required:true' class="form-control" %}
+        <br>
+    
+    
+        <label for="question">Question</label>
+        {% render_field shortQuestionForm.question|attr:'required:true' class="form-control" placeholder="Example: What is the relation calculus?" %}
+        <br>
+    
+        <label for="question_number">Marks</label>
+        {% render_field shortQuestionForm.marks|attr:'required:true' class="form-control" placeholder="Example: 5" %}
+        <br>
+    </div>
+    
+  
+    <button name="add_short" type="submit" class="btn btn-success" style="border-radius: 0%;">Submit Question</button>
+  </form>

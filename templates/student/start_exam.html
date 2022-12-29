@@ -1,0 +1,231 @@
+{% extends 'student/studentbase.html' %}
+{% block content %}
+{% load static %}
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  <style>
+    .jumbotron {
+      margin-bottom: 0px !important;
+      height: 318px;
+    }
+
+    .my-custom-scrollbar {
+      position: relative;
+      width: 100%;
+      height: 600px;
+      overflow: auto;
+    }
+  </style>
+</head>
+
+<div class="container">
+  <div class="row">
+    <div class="col-8 my-custom-scrollbar my-custom-scrollbar-primary">
+      <form class="form" name="examsheet" id="examsheet" autocomplete="off" onsubmit="saveAns()"
+        action="/student/calculate-marks" method="POST">
+        {% csrf_token %}
+        <h2 style="text-align: center;">Course Name: {{course.course_name}}</h2>
+        <hr>
+
+        {% for q in questions %}
+        <div class="row">
+          <div class="col-md-8">
+            <h3 class="text-danger">{{ forloop.counter }}. {{q.question}}</h3>
+          </div>
+          <div class="col">
+            <h4 style="text-align: right;">[{{q.marks}} Marks]</h4>
+          </div>
+        </div>
+
+        <input type="hidden" name="csrfmiddlewaretoken"
+          value="C24rUotmdHawVQJL3KrqiWxvti8UffOFYUc8TRbZtLt36AVLdP3jbkzUVe3beRAa">
+
+        <div class="form-check mx-4">
+          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option1}}" value="Option1">
+          <label class="form-check-label" for="option1">
+            {{q.option1}}
+          </label>
+        </div>
+
+
+        <div class="form-check mx-4">
+          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option2}}" value="Option2">
+          <label class="form-check-label" for="option2">
+            {{q.option2}}
+          </label>
+        </div>
+
+
+        <div class="form-check mx-4">
+          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option3}}" value="Option3">
+          <label class="form-check-label" for="option3">
+            {{q.option3}}
+          </label>
+        </div>
+
+
+        <div class="form-check mx-4">
+          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option4}}" value="Option4">
+          <label class="form-check-label" for="option4">
+            {{q.option4}}
+          </label>
+        </div>
+
+        <br>
+        <hr>
+        {% endfor %}
+
+
+        {% for q in shorts %}
+        <div class="row">
+          <div class="col-md-8">
+            <h3 class="text-danger">{{ questions.count|add:forloop.counter }}. {{q.question}}</h3>
+          </div>
+          <div class="col">
+            <h4 style="text-align: right;">[{{q.marks}} Marks]</h4>
+          </div>
+        </div>
+
+
+        <textarea placeholder="Write your answer here..." name="question{{ forloop.counter }}"
+          id="question{{ forloop.counter }}" cols="50" rows="1"></textarea>
+        <br><br>
+        <hr>
+        {% endfor %}
+
+        <input type="hidden" id="unfocus" name="unfocus" value="0">
+        <input class="btn btn-success btn-lg" style="border-radius: 0%;" type="submit" value="Submit Answers">
+      </form>
+    </div>
+
+    <div class="col w-25 h-25 d-inline-block">
+      <div class="row">
+        <img style="width: 400px; text-size-adjust: auto;" src="{% url 'video-feed' %}">
+      </div>
+      <div class="center" style="margin-top: 10px; margin-left: 80px;">
+        {% include "student/timer.html" %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var myCustomScrollbar = document.querySelector('.my-custom-scrollbar');
+  var ps = new PerfectScrollbar(myCustomScrollbar);
+  var scrollbarY = myCustomScrollbar.querySelector('.ps__rail-y');
+  myCustomScrollbar.onscroll = function () {
+    scrollbarY.style.cssText = `top: ${this.scrollTop}px!important; height: 600px; right: ${-this.scrollLeft}px`;
+  }
+</script>
+
+<script>
+  var counter = 4;
+  document.addEventListener("visibilitychange", function () {
+    counter--;
+    if (counter % 2 == 0)
+      notifyMe();
+  });
+
+  function notifyMe() {
+    if ('{{ course.course_type }}' == 'Strict') {
+      window.location.href = "{% url 'expel' course.id %}";
+    }
+
+    else if ('{{ course.course_type }}' == 'Warning') {
+      if (counter == 2) {
+        alert("if you change your tab once more, you will expelled!");
+      } else {
+        window.location.href = "{% url 'expel' course.id %}";
+      }
+    }
+
+    else if ('{{ course.course_type }}' == 'Notify') {
+
+      let permission = Notification.permission;
+      if (permission === "granted") {
+        showNotification();
+      }
+      else if (permission === "default") {
+        requestAndShowPermission();
+        showNotification();
+      }
+      else {
+        alert("Get Alert");
+      }
+
+      function requestAndShowPermission() {
+        Notification.requestPermission(function (permission) {
+          if (permission === "granted") {
+            showNotification();
+          }
+        });
+      }
+
+      function showNotification() {
+
+        unfocus = document.getElementById('unfocus');
+        let x = ((+unfocus.value) + 1);
+        unfocus.value = x;
+
+        var title = "Alert";
+        var body = "You have being spoted changing your tab.\nYou might be get expelled";
+        var notification = new Notification('Alert', { body });
+        notification.onclick = () => {
+          notification.close();
+          window.parent.focus();
+        }
+      }
+    }
+
+    else if ('{{ course.course_type }}' == 'Open Book') {
+      // Everything is allowed
+    }
+
+    else if ('{{ course.course_type }}' == 'Capture') {
+      alert("Capture");
+      alert(counter);
+    }
+
+    else if ('{{ course.course_type }}' == 'Record') {
+      alert("Record");
+      alert(counter);
+    }
+  }
+
+</script>
+
+<script>
+  function saveAns() {
+    var ele = document.getElementsByTagName('input');
+    for (var i = 0; i < ele.length; i++) {
+      if (ele[i].type == "radio") {
+        if (ele[i].checked) {
+          setCookie(ele[i].name, ele[i].value);
+        }
+      }
+    }
+  }
+
+  function setCookie(cname, cvalue) {
+    var d = new Date();
+    d.setTime(d.getTime() + (5 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+</script>
+
+<script>
+  window.onload = function () {
+    window.setTimeout('submit_marks()', '{{time_remain}}');
+  };
+
+  function submit_marks() {
+    document.examsheet.submit();
+  }
+
+</script>
+
+{% endblock content %}

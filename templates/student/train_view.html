@@ -1,0 +1,22 @@
+<head>
+    <style>
+        .center{
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 80%;
+        }
+    </style>
+</head>
+
+<div class="container content">
+    <h3 class="text-warning">Hold Still! It will auto redirect to dashboard.</h3>
+    <img src="{% url 'train-feed' %}" alt="video-camera" class="center">
+</div>
+
+<script>
+    window.setInterval('refresh()', 10000); 	
+    function refresh() {
+        window.location.reload();
+    }
+</script>

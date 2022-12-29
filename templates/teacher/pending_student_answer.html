@@ -1,0 +1,162 @@
+{% extends 'teacher/teacherbase.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <style type="text/css">
+        .content {
+            margin-bottom: 0px !important;
+            height: 363px;
+        }
+
+        a:link {
+            text-decoration: none;
+        }
+
+        .order-card {
+            color: rgb(255, 255, 255);
+        }
+
+        .bg-c-blue {
+            background: #04868f;
+        }
+
+        .bg-c-green {
+            background: #4C51BF;
+        }
+
+        .bg-c-yellow {
+            background: #F56565;
+        }
+
+        .bg-c-gtx {
+            background: #57717d;
+        }
+
+        .card {
+            -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+            box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+            margin-bottom: 30px;
+            -webkit-transition: all 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .card .card-block {
+            padding: 25px;
+        }
+
+        .order-card i {
+            font-size: 26px;
+        }
+
+        .f-left {
+            float: left;
+        }
+
+        .f-right {
+            float: right;
+        }
+
+        header {
+            left: 0px;
+            right: 0px;
+        }
+
+        td,
+        th {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<div class="container">
+    <div class="row">
+        <h4>Answer Sheet For: <u><i>{{ student }}</i></u></h4>
+    </div>
+    <div class="row">
+        <h4 style="text-align: right;">Course Name: {{ course }}</h4>
+    </div>
+    <div class="row">
+        <h4 style="text-align: right;">Changed Tab: {{ unfocus }}</h4>
+    </div>
+
+    <hr>
+
+    <div class="d-flex justify-content-center">
+        <div class="col-md-10">
+            <form class="form" method="post" autocomplete="off">
+                {% csrf_token %}
+                <input type="hidden" name="csrfmiddlewaretoken"
+                    value="C24rUotmdHawVQJL3KrqiWxvti8UffOFYUc8TRbZtLt36AVLdP3jbkzUVe3beRAa">
+
+                {% if mcq|length > 0 %}
+                <h2>MCQ SECTION</h2>
+                <hr>
+                {% for q, a, m, ms in mcq %}
+                <div class="row">
+                    <div class="col-md-8">
+                        <h3 class="text-danger">{{ forloop.counter }}. {{q}}</h3>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row float-right">
+                            <input value="{{ m }}" style="width: 30px;" type="text" name="mark{{forloop.counter}}"
+                                id="mark{{forloop.counter}}">
+                            <h4>/</h4>
+                            <h4>{{ ms }} Marks</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Selected Answer: {{ a }}</h4>
+                    </div>
+                </div>
+                <br>
+                <hr>
+                {% endfor %}
+                {% endif %}
+
+                {% if shorts|length > 0 %}
+                <h2>SHORT QUESTION SECTION</h2>
+                <hr>
+                {% for q, a, ms in shorts %}
+                <div class="row">
+                    <div class="col-md-8">
+                        <h3 class="text-danger">{{ forloop.counter|add:mcq_len }}. {{ q }}</h3>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row float-right">
+                            <input value="0" style="width: 30px;" type="text" name="mark{{forloop.counter|add:mcq_len}}"
+                                id="mark{{forloop.counter|add:mcq_len}}">
+                            <h4>/</h4>
+                            <h4>{{ ms }} Marks</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Given Answer: {{ a }}</h4>
+                    </div>
+                </div>
+                <br>
+                <hr>
+                {% endfor %}
+                {% endif %}
+
+                <input name="submit_marks" class="btn btn-success btn-lg" style="border-radius: 0%;" type="submit" value="Submit Marks">
+                <input name="expel" class="btn btn-danger btn-lg" style="border-radius: 0%;" type="submit" value="Expel!">
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="http://netdna.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+{% endblock content %}

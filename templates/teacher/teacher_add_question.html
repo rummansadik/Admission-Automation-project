@@ -1,0 +1,55 @@
+{% extends 'teacher/teacherbase.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    a:link {
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+{% include 'messages.html' %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-9">
+      <h2 id="title" style="text-align:left; ">Add Muliple Choice Question</h2>
+    </div>
+    <button type="button" class="btn btn-primary btn-lg float-right" onclick="addMCQ()">MCQ</button>
+    <button type="button" class="btn btn-primary btn-lg float-right" onclick="addShort()">Short Question</button>
+  </div><br>
+  <div id="add-mcq">
+    {% include "teacher/add_mcq.html" %}
+  </div>
+  <div id="add-short" style="display: none">
+    {% include "teacher/add_short.html" %}
+  </div>
+</div>
+
+<script>
+  function addMCQ(){
+    var mcq = document.getElementById("add-mcq");
+    var short = document.getElementById("add-short");
+    var title = document.getElementById("title");
+    mcq.style.display = 'block';
+    short.style.display = 'none';
+    title.innerHTML = "Add Muliple Choice Question";
+  }
+
+  function addShort(){
+    var mcq = document.getElementById("add-mcq");
+    var short = document.getElementById("add-short");
+    var title = document.getElementById("title");
+    mcq.style.display = 'none';
+    short.style.display = 'block';
+    title.innerHTML = "Add Question";
+  }
+</script>
+
+{% endblock content %}
